@@ -62,7 +62,7 @@ public class CustomsDetailServices implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
-        userEntity.getRoles().forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+        userEntity.getRoles().forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().getRoleName()))));
 
         // Retorna un objeto User que implementa UserDetails con la información del usuario, incluyendo las autoridades (roles)
         return new User(userEntity.getUsername(), userEntity.getPassword(),

@@ -7,11 +7,13 @@ import com.unicar.Class_shedule.commons.Docent.presentation.dto.DocentDto;
 import com.unicar.Class_shedule.commons.Docent.presentation.payload.DocentPayload;
 import com.unicar.Class_shedule.commons.Docent.service.interfaces.IDocentService;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,7 @@ public class DocentServiceImpl implements IDocentService {
     private final DocentFactory docentFactory;
 
     @Override
+    @Transactional
     public void saveDocent(DocentPayload docentPayload) {
         // Crear una instancia de UserEntity a partir de los datos del payload
         UserEntity userEntity = UserEntity.builder()
@@ -50,6 +53,7 @@ public class DocentServiceImpl implements IDocentService {
     }
 
     @Override
+    @Transactional
     public void deleteByDni(String dni) {
         Docent docent = docentRepository.findByUserEntityDni(dni)
                 .orElseThrow(() -> new IllegalArgumentException("DOCENT NOT FOUND WITH DNI " + dni));
@@ -57,6 +61,7 @@ public class DocentServiceImpl implements IDocentService {
     }
 
     @Override
+    @Transactional
     public void updateDocent(DocentPayload docentPayload, String dni) {
 
         Optional<Docent> optionalDocent = docentRepository.findByUserEntityDni(dni);
@@ -86,13 +91,22 @@ public class DocentServiceImpl implements IDocentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<DocentDto> findDocentByDni(String dni) {
 
-        return docentRepository.findByUserEntityDni(dni)
-                .map(docent -> docentFactory.docentsDto(docent));
+       Optional<Docent> optionalDocent = docentRepository.findByUserEntityDni(dni);
+
+       if (optionalDocent.isPresent()){
+           Docent docent= optionalDocent.get();
+           DocentDto docentDto = docentFactory.docentsDto(docent);
+           return Optional.of(docentDto);
+       }else {
+           throw new EntityNotFoundException("DOCENT NOT FOUND WITH DNI "+ dni);
+       }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DocentDto> findDoncents(Pageable pageable) {
         Page<Docent>docentPage = docentRepository.findAll(pageable);
 
