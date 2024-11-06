@@ -57,8 +57,18 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_TEACHER)
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_TEACHER + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN");
+                    httpRequests
+                            .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_COURSES)
                             .hasAnyAuthority("ROLE_ADMIN")
-                    ;
+                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_COURSES+ "/{name}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_COURSES+ "/{name}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_COURSES)
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_COURSES + "/{name}")
+                            .hasAnyAuthority("ROLE_ADMIN");
 
                     // Deniega todas las demás solicitudes que no coincidan con las reglas anteriores
                     httpRequests.anyRequest().denyAll();
