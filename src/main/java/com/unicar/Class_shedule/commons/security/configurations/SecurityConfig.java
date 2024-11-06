@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
 
 
 @Configuration
@@ -46,8 +44,21 @@ public class SecurityConfig {
                     httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_LOGIN).permitAll();
 
                     // Endpoints privados que requieren autenticación y autorización específica
-                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SINGNUP)
-                 .hasAuthority(RoleEnum.ADMIN.getRoleName());
+                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SIGNUP)
+                            .hasAuthority(RoleEnum.ADMIN.getRoleName());
+
+                    httpRequests
+                            .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_TEACHER)
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_TEACHER + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_TEACHER + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_TEACHER)
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_TEACHER + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                    ;
 
                     // Deniega todas las demás solicitudes que no coincidan con las reglas anteriores
                     httpRequests.anyRequest().denyAll();
