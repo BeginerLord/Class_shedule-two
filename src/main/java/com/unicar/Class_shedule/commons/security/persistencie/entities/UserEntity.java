@@ -20,58 +20,57 @@ import java.util.Set;
 public class UserEntity {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
     @Column(unique = true)
     private String username;
-        @Column(name = "full_name", nullable = false)
-        @NotBlank(message = "El nombre completo es obligatorio")
-        private String fullName;
 
-        @Column(unique = true, nullable = false)
-        @NotBlank(message = "El DNI es obligatorio")
-        @Size(min = 8, max = 12, message = "El DNI debe tener entre 8 y 12 caracteres")
-        private String dni;
+    @Column(name = "full_name", nullable = false)
+    @NotBlank(message = "El nombre completo es obligatorio")
+    private String fullName;
 
-        @Column(unique = true, name = "phone_number", nullable = false)
-        @NotBlank(message = "El número de teléfono es obligatorio")
-        @Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "El número de teléfono debe tener entre 10 y 15 dígitos y puede contener un símbolo '+' opcional al inicio")
-        private String phoneNumber;
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "El DNI es obligatorio")
+    @Size(min = 8, max = 12, message = "El DNI debe tener entre 8 y 12 caracteres")
+    private String dni;
 
-        @Column(nullable = false)
-        @NotBlank(message = "La dirección es obligatoria")
-        private String address;
+    @Column(unique = true, name = "phone_number", nullable = false)
+    @NotBlank(message = "El número de teléfono es obligatorio")
+    @Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "El número de teléfono debe tener entre 10 y 15 dígitos y puede contener un símbolo '+' opcional al inicio")
+    private String phoneNumber;
 
-        @Email(message = "Debe proporcionar un correo válido")
-        @NotBlank(message = "El correo es obligatorio")
-        @Column(nullable = false)
-        private String email;
+    @Column(nullable = false)
+    @NotBlank(message = "La dirección es obligatoria")
+    private String address;
 
-        @NotBlank(message = "La contraseña es obligatoria")
-        @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
-        private String password;
+    @Email(message = "Debe proporcionar un correo válido")
+    @NotBlank(message = "El correo es obligatorio")
+    @Column(nullable = false)
+    private String email;
 
-        // Getters y setters
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    private String password;
+
+    // Getters y setters
 
     @Column(name = "is_enabled")
 
-    private  boolean isEnabled;
+    private boolean isEnabled;
     @Column(name = "account_No_Locked")
 
-    private  boolean accountNoLocked;
+    private boolean accountNoLocked;
     @Column(name = "account_No_Expired")
 
-    private  boolean accountNoExpired;
+    private boolean accountNoExpired;
     @Column(name = "credential_No_Expired")
 
-    private  boolean credentialNoExpired;
+    private boolean credentialNoExpired;
 
 
-
-
-     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 

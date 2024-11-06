@@ -20,7 +20,7 @@ public class AuthenticationController {
     @Autowired
     private CustomsDetailServices userDetailService;
 
-    @PostMapping(EndpointsConstants.ENDPOINT_SINGNUP)
+    @PostMapping(EndpointsConstants.ENDPOINT_SIGNUP)
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthCreateUserRequest userRequest){
         return new ResponseEntity<>(this.userDetailService.createUser(userRequest), HttpStatus.CREATED);
     }
