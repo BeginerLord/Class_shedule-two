@@ -1,4 +1,4 @@
-package com.unicar.Class_shedule.commons.Docent.service.implementation;
+package com.unicar.Class_shedule.commons.Docent.service.Implementation;
 
 import com.unicar.Class_shedule.commons.Docent.factory.DocentFactory;
 import com.unicar.Class_shedule.commons.Docent.persistence.entity.Docent;
