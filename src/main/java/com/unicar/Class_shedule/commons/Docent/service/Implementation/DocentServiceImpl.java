@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class DocentServiceImpl implements IDocentService {
 
     private final DocentRepository docentRepository;
     private final DocentFactory docentFactory;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -37,7 +39,7 @@ public class DocentServiceImpl implements IDocentService {
                 .phoneNumber(docentPayload.getPhoneNumber())
                 .address(docentPayload.getAddress())
                 .email(docentPayload.getEmail())
-                .password(docentPayload.getPassword())
+                .password(passwordEncoder.encode(docentPayload.getPassword()))
                 .isEnabled(true)
                 .accountNoLocked(true)
                 .accountNoExpired(true)

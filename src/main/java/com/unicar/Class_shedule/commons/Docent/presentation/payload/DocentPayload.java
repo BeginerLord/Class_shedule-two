@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class DocentPayload {
 
     @NotBlank(message = "can't be in blank")
+    @Size(max = 50, message = "El perfil no puede exceder los 50 caracteres")
     private String profile;
 
     @NotBlank(message = "can't be in blank")
