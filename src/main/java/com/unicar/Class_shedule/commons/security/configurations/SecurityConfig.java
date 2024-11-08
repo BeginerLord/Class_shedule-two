@@ -61,9 +61,9 @@ public class SecurityConfig {
                     httpRequests
                             .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_COURSES)
                             .hasAnyAuthority("ROLE_ADMIN")
-                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_COURSES+ "/{name}")
+                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_COURSES + "/{name}")
                             .hasAnyAuthority("ROLE_ADMIN")
-                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_COURSES+ "/{name}")
+                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_COURSES + "/{name}")
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_COURSES)
                             .hasAnyAuthority("ROLE_ADMIN")
