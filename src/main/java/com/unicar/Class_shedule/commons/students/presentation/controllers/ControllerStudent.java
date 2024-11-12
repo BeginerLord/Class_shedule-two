@@ -1,6 +1,7 @@
 package com.unicar.Class_shedule.commons.students.presentation.controllers;
 
 import com.unicar.Class_shedule.commons.students.presentation.dto.StudentDto;
+import com.unicar.Class_shedule.commons.students.presentation.payload.EnroolAlCoursePayload;
 import com.unicar.Class_shedule.commons.students.presentation.payload.StudentPayload;
 import com.unicar.Class_shedule.commons.students.services.interfaces.IStudentService;
 import com.unicar.Class_shedule.commons.utils.constants.EndpointsConstants;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -106,5 +108,16 @@ private  final IStudentService iStudentService;
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping(value = "/enroll")
 
-}
+    public  ResponseEntity<?>saveStudentWithCourse (@RequestBody EnroolAlCoursePayload enroolAlCoursePayload ) throws URISyntaxException {
+
+        iStudentService.enrollACourse(enroolAlCoursePayload);
+
+        return ResponseEntity.created(new URI(EndpointsConstants.ENDPOINT_STUDENT+"/enroll")).build();
+
+
+
+
+
+    }}

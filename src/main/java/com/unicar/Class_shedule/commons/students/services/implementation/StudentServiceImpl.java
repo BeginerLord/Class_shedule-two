@@ -1,5 +1,7 @@
 package com.unicar.Class_shedule.commons.students.services.implementation;
 
+import com.unicar.Class_shedule.commons.Course.persistence.entity.CourseEntity;
+import com.unicar.Class_shedule.commons.Course.persistence.repository.CourseRepository;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.RoleEntity;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.RoleEnum;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
@@ -7,17 +9,23 @@ import com.unicar.Class_shedule.commons.security.persistencie.repositories.RoleR
 import com.unicar.Class_shedule.commons.students.factory.StudentFactory;
 import com.unicar.Class_shedule.commons.students.persistencie.entity.Student;
 import com.unicar.Class_shedule.commons.students.persistencie.repositories.IStudentsRepository;
-import com.unicar.Class_shedule.commons.students.presentation.dto.StudentDto;
+ import com.unicar.Class_shedule.commons.students.presentation.dto.StudentDto;
+import com.unicar.Class_shedule.commons.students.presentation.payload.EnroolAlCoursePayload;
 import com.unicar.Class_shedule.commons.students.presentation.payload.StudentPayload;
 import com.unicar.Class_shedule.commons.students.services.interfaces.IStudentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +38,8 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements IStudentService {
 
     private  final IStudentsRepository  iStudentsRepository;
+    private final CourseRepository courseRepository;
+
     private  final StudentFactory studentFactory;
     private final PasswordEncoder passwordEncoder;
     private  final RoleRepository roleRepository;
@@ -61,7 +71,7 @@ public class StudentServiceImpl implements IStudentService {
                 .phoneNumber(studentPayload.getPhoneNumber())
                 .address(studentPayload.getAddress())
                 .email(studentPayload.getEmail())
-                .password(studentPayload.getPassword())
+                .password(passwordEncoder.encode(studentPayload.getPassword()))
                 .isEnabled(true)
                 .accountNoLocked(true)
                 .accountNoExpired(true)
@@ -130,8 +140,61 @@ public class StudentServiceImpl implements IStudentService {
         return new PageImpl<>(studentDtoList, pageable,studentPage.getTotalElements());
     }
 
+    @Override
+    @Transactional
+    public void enrollACourse(EnroolAlCoursePayload enroolAlCoursePayload) {
+        Optional<Student> studentDto = iStudentsRepository.findByUserEntityDni(enroolAlCoursePayload.getDni());
+        Optional<CourseEntity> course = courseRepository.findById(enroolAlCoursePayload.getIdCurso());
+
+        if (studentDto.isPresent() && course.isPresent()) {
+            Student estudiante = studentDto.get();
+            CourseEntity curso = course.get();
+
+            // Verificar si el estudiante ya está inscrito en el curso
+            if (estudiante.getCourses().contains(curso)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El estudiante ya está inscrito en este curso");
+            }
+
+            // Si no está inscrito, agregar el curso y guardar
+            estudiante.getCourses().add(curso);
+            iStudentsRepository.save(estudiante);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudiante o curso no encontrado");
+        }
+    }
+
+    @Override
+    public List<Object[]> getCourseDetailsForUser() {
+
+        // Obtener el nombre de usuario (username) de la sesión
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        System.out.println(username);
+        // Buscar al estudiante en la base de datos usando el username
+        Optional<Student> student = iStudentsRepository.findByUserEntityUsername(username);
+
+        // Verificar si el estudiante fue encontrado
+        if (student.isEmpty()) {
+            throw new RuntimeException("Estudiante no encontrado para el usuario autenticado");
+        }
+
+        // Obtener el studentId desde el estudiante encontrado
+        Long studentIdFromDb = student.get().getId();
+
+        // Verificar si el studentId proporcionado coincide con el del estudiante encontrado
+        if (!studentIdFromDb.equals(studentIdFromDb)) {
+            throw new RuntimeException("El ID del estudiante no coincide con el usuario autenticado");
+        }
+
+        // Obtener los detalles de los cursos para el estudiante desde el repositorio de cursos
+      //  return iStudentsRepository.getCourseDetailsByStudent(studentIdFromDb);
+    return (List<Object[]>) ResponseEntity.ok(ResponseEntity.ok());
+    }
+
 
 }
+
 
 
 
