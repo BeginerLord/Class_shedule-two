@@ -11,7 +11,7 @@ public interface IScheduleService {
 
     void saveSchedule(SchedulePayload schedulePayload);
 
-    void deleteByDay(Long id);
+    void deleteById(Long id);
 
     void updateSchedule(SchedulePayload schedulePayload, Long id);
 

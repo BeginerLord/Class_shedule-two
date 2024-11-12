@@ -39,7 +39,7 @@ public class ScheduleServiceImpl implements IScheduleService {
 
     @Override
     @Transactional
-    public void deleteByDay(Long id) {
+    public void deleteById(Long id) {
 
         ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with id: " + id));
