@@ -58,6 +58,22 @@ public class SecurityConfig {
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_TEACHER + "/{dni}")
                             .hasAnyAuthority("ROLE_ADMIN");
+
+
+                    httpRequests
+                            .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_STUDENT)
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT )
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
+                            .hasAnyAuthority("ROLE_ADMIN");
+
+
+
                     httpRequests
                             .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_COURSES)
                             .hasAnyAuthority("ROLE_ADMIN")
