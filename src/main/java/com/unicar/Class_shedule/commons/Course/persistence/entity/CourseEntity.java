@@ -1,8 +1,13 @@
 package com.unicar.Class_shedule.commons.Course.persistence.entity;
 
+import com.unicar.Class_shedule.commons.Docent.persistence.entity.Docent;
+import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
+import com.unicar.Class_shedule.commons.students.persistencie.entity.Student;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,5 +28,14 @@ public class CourseEntity {
     private Integer cantHrs;
     @Column(name = "level", length = 50, nullable = false)
     private String level;
+
+    @ManyToOne
+    @JoinColumn(name = "docente_id")  // No puede ser nulo
+    private Docent docente;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id", nullable = false)
+    private ScheduleEntity schedule;
+
 
 }

@@ -19,4 +19,9 @@ public class CoursePayload {
     @NotBlank(message = "can't be in blank")
     @Size(max = 50, message = "Level must be at most 50 characters")
     private String level;
+
+    private  String dniProffesor;
+
+
+    private Long idHorario;
 }

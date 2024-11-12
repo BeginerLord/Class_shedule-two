@@ -6,6 +6,12 @@ import com.unicar.Class_shedule.commons.Course.persistence.entity.CourseEntity;
 import com.unicar.Class_shedule.commons.Course.persistence.repository.CourseRepository;
 import com.unicar.Class_shedule.commons.Course.presentation.dto.CourseDto;
 import com.unicar.Class_shedule.commons.Course.presentation.payload.CoursePayload;
+import com.unicar.Class_shedule.commons.Docent.persistence.entity.Docent;
+import com.unicar.Class_shedule.commons.Docent.persistence.repositories.DocentRepository;
+import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
+import com.unicar.Class_shedule.commons.Schedule.persistence.repository.ScheduleRepository;
+import com.unicar.Class_shedule.commons.utils.exceptions.DocentNotFoundException;
+import com.unicar.Class_shedule.commons.utils.exceptions.ScheduleNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,17 +29,43 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements ICourseService {
     private final CourseRepository courseRepository;
     private final FactoryCourse factoryCourse;
+    private final ScheduleRepository scheduleRepository;
+    private final DocentRepository docentRepository;
 
     @Override
     @Transactional
     public void saveCourse(CoursePayload coursePayload) {
+        // Validate payload (optional, depending on your use case)
+        if (coursePayload == null || coursePayload.getName() == null || coursePayload.getLevel() == null) {
+            throw new IllegalArgumentException("Course details cannot be null");
+        }
+
+        // Creating the CourseEntity from the CoursePayload
         CourseEntity courseEntity = CourseEntity.builder()
                 .name(coursePayload.getName())
                 .level(coursePayload.getLevel())
                 .cantHrs(coursePayload.getCantHrs())
                 .build();
+
+        // Finding the docent by DNI (with improved exception handling)
+        Docent docent = docentRepository.findByUserEntityDni(coursePayload.getDniProffesor())
+                .orElseThrow(() -> new DocentNotFoundException("Docente con cédula no encontrada: " + coursePayload.getDniProffesor()));
+
+        // Setting the docent to the course entity
+        courseEntity.setDocente(docent);
+
+        // Finding the schedule by ID from the payload
+        ScheduleEntity scheduleEntity = scheduleRepository.findById(coursePayload.getIdHorario())
+                .orElseThrow(() -> new ScheduleNotFoundException("Horario no encontrado: " + coursePayload.getIdHorario()));
+
+        // Setting the schedule to the course entity
+        courseEntity.setSchedule(scheduleEntity);
+
+        // Saving the course entity
         courseRepository.save(courseEntity);
     }
+
+
 
     @Override
     @Transactional

@@ -23,9 +23,7 @@ public class ScheduleEntity {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "docente_id", nullable = false)
-    private Docent docente;
+
 
     @Column(name = "room", length = 50, nullable = false)
     private String room;

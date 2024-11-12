@@ -74,6 +74,14 @@ public class SecurityConfig {
 
 
 
+
+                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SCHEDULE).hasAnyAuthority("ROLE_ADMIN");
+
+
+
+                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_STUDENT+"/enroll").hasAnyAuthority("ROLE_ADMIN");
+
+
                     httpRequests
                             .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_COURSES)
                             .hasAnyAuthority("ROLE_ADMIN")

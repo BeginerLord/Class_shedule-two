@@ -1,11 +1,13 @@
 package com.unicar.Class_shedule.commons.students.services.interfaces;
 
-import com.unicar.Class_shedule.commons.students.presentation.dto.StudentDto;
+ import com.unicar.Class_shedule.commons.students.presentation.dto.StudentDto;
+import com.unicar.Class_shedule.commons.students.presentation.payload.EnroolAlCoursePayload;
 import com.unicar.Class_shedule.commons.students.presentation.payload.StudentPayload;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
+ import java.util.List;
+ import java.util.Optional;
 
 public interface IStudentService {
 
@@ -18,4 +20,8 @@ public interface IStudentService {
     Optional<StudentDto> findStudentByDni(String dni);
 
     Page<StudentDto> findStudents(Pageable pageable);
+
+    void  enrollACourse(EnroolAlCoursePayload enroolAlCoursePayload);
+    List<Object[]> getCourseDetailsForUser();
+
 }

@@ -1,10 +1,13 @@
 package com.unicar.Class_shedule.commons.students.persistencie.entity;
 
+import com.unicar.Class_shedule.commons.Course.persistence.entity.CourseEntity;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +34,14 @@ public class Student {
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userEntity;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_course", // Nombre de la tabla intermedia
+            joinColumns = @JoinColumn(name = "student_id"), // Columna que referencia al estudiante
+            inverseJoinColumns = @JoinColumn(name = "course_id") // Columna que referencia al curso
+    )
+    private Set<CourseEntity> courses; // Relación con la entidad Course
+
 }
