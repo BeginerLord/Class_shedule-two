@@ -36,6 +36,7 @@ public class Student {
     private UserEntity userEntity;
 
 
+
     @ManyToMany
     @JoinTable(
             name = "student_course", // Nombre de la tabla intermedia

@@ -1,6 +1,7 @@
 package com.unicar.Class_shedule.commons.Schedule.service.interfaces;
 
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ProfessorScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePayload;
 import org.springframework.data.domain.Page;
@@ -23,4 +24,6 @@ public interface IScheduleService {
     Page<ScheduleDto> findSchedules(Pageable pageable);
 
     List<CourseScheduleDto> findCourseScheduleByUsername(Principal principal);
+
+    List<ProfessorScheduleDto>findProfessorScheduleByUsername(Principal principal);
 }

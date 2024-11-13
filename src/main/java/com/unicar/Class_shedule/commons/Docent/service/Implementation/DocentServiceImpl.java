@@ -68,7 +68,7 @@ public class DocentServiceImpl implements IDocentService {
                 .build();
         Docent docent = Docent.builder()
                 .profile(docentPayload.getProfile())
-                .user(userEntity)
+                .userEntity(userEntity)
                 .build();
 
         docentRepository.save(docent);
@@ -78,7 +78,7 @@ public class DocentServiceImpl implements IDocentService {
     @Override
     @Transactional
     public void deleteByDni(String dni) {
-        Docent docent = docentRepository.findByUserDni(dni)
+        Docent docent = docentRepository.findByUserEntityDni(dni)
                 .orElseThrow(() -> new IllegalArgumentException("DOCENT NOT FOUND WITH DNI " + dni));
         docentRepository.delete(docent);
     }
@@ -87,11 +87,11 @@ public class DocentServiceImpl implements IDocentService {
     @Transactional
     public void updateDocent(DocentPayload docentPayload, String dni) {
 
-        Optional<Docent> optionalDocent = docentRepository.findByUserDni(dni);
+        Optional<Docent> optionalDocent = docentRepository.findByUserEntityDni(dni);
 
         if (optionalDocent.isPresent()) {
             Docent docent = optionalDocent.get();
-            UserEntity userEntity = docent.getUser();
+            UserEntity userEntity = docent.getUserEntity();
 
             userEntity.setUsername(docentPayload.getUsername());
             userEntity.setFullName(docentPayload.getFullName());
@@ -102,7 +102,7 @@ public class DocentServiceImpl implements IDocentService {
             userEntity.setPassword(docentPayload.getPassword());
 
             docent.setProfile(docentPayload.getProfile());
-            docent.setUser(userEntity);
+            docent.setUserEntity(userEntity);
 
             docentRepository.save(docent);
 
@@ -117,7 +117,7 @@ public class DocentServiceImpl implements IDocentService {
     @Transactional(readOnly = true)
     public Optional<DocentDto> findDocentByDni(String dni) {
 
-        Optional<Docent> optionalDocent = docentRepository.findByUserDni(dni);
+        Optional<Docent> optionalDocent = docentRepository.findByUserEntityDni(dni);
 
         if (optionalDocent.isPresent()) {
             Docent docent = optionalDocent.get();

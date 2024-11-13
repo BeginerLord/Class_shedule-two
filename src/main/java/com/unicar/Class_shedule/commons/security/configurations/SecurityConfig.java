@@ -72,7 +72,9 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_SCHEDULE + "/student/schedule")
-                            .hasAuthority("ROLE_STUDENT");
+                            .hasAuthority("ROLE_STUDENT")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_SCHEDULE + "/professor/schedule")
+                            .hasAuthority("ROLE_TEACHER");
 
 
                     httpRequests
