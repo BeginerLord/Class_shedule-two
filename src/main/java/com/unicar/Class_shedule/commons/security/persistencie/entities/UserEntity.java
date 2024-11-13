@@ -1,5 +1,6 @@
 package com.unicar.Class_shedule.commons.security.persistencie.entities;
 
+import com.unicar.Class_shedule.commons.Docent.persistence.entity.Docent;
 import com.unicar.Class_shedule.commons.students.persistencie.entity.Student;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -70,12 +71,18 @@ public class UserEntity {
 
     private boolean credentialNoExpired;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
+
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Student student;
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Docent docent;
+
+
+
 
 }

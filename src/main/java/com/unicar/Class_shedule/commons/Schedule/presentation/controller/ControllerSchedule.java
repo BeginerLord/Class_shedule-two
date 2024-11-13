@@ -2,6 +2,7 @@ package com.unicar.Class_shedule.commons.Schedule.presentation.controller;
 
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ProfessorScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePayload;
 import com.unicar.Class_shedule.commons.Schedule.service.interfaces.IScheduleService;
@@ -108,6 +109,18 @@ public class ControllerSchedule {
     @GetMapping("/student/schedule")
     public ResponseEntity<List<CourseScheduleDto>> getCourseScheduleByUsername(Principal principal) {
         List<CourseScheduleDto> schedules = iScheduleService.findCourseScheduleByUsername(principal);
+        return ResponseEntity.ok(schedules);
+    }
+
+
+    @Operation(summary = "Obtener horario del profesor logueado", description = "Devuelve el horario de los curso para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/professor/schedule")
+    public ResponseEntity<List<ProfessorScheduleDto>> getScheduleByProfessor(Principal principal) {
+        List<ProfessorScheduleDto> schedules = iScheduleService.findProfessorScheduleByUsername(principal);
         return ResponseEntity.ok(schedules);
     }
 

@@ -19,9 +19,8 @@ public class Docent {
 
     @Column(name = "profile", length = 50, nullable = false)
     private String profile;
-
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity user;
+    private UserEntity userEntity;
 
 }

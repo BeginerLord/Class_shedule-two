@@ -4,6 +4,7 @@ import com.unicar.Class_shedule.commons.Schedule.factory.ScheduleFactory;
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
 import com.unicar.Class_shedule.commons.Schedule.persistence.repository.ScheduleRepository;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ProfessorScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePayload;
 import com.unicar.Class_shedule.commons.Schedule.service.interfaces.IScheduleService;
@@ -134,6 +135,46 @@ public class ScheduleServiceImpl implements IScheduleService {
         System.out.println("Course schedules found: " + courseSchedules);
 
         return courseSchedules;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+
+    public List<ProfessorScheduleDto> findProfessorScheduleByUsername(Principal principal) {
+        String username = principal.getName();
+        System.out.println("Fetching professor with username: " + username);
+
+        UserEntity userEntity = userRepository.findUserEntityByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Professor not found with username: " + username));
+
+        System.out.println("Professor found: " + userEntity);
+
+        if (userEntity.getDocent() == null) {
+            throw new IllegalArgumentException("No professor associated with user: " + username);
+        }
+
+        Long professorId = userEntity.getDocent().getId();
+        System.out.println("Fetching professor schedule for professor ID: " + professorId);
+
+        List<ProfessorScheduleDto> professorSchedules = scheduleRepository.findCourseScheduleByProfessorId(professorId)
+                .stream()
+                .map(schedule -> scheduleFactory.professorScheduleDto(
+                        ScheduleEntity.builder()
+                                .startTime(schedule.startTime())
+                                .endTime(schedule.endTime())
+                                .room(schedule.room())
+                                .day(schedule.day())
+                                .build(),
+                        schedule.courseName(),
+                        schedule.courseHours(),
+                        schedule.level(),
+                        schedule.professorName()
+                ))
+                .collect(Collectors.toList());
+
+        System.out.println("Professor schedules found: " + professorSchedules);
+
+        return professorSchedules;
     }
 
 }

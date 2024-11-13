@@ -48,7 +48,7 @@ public class CourseServiceImpl implements ICourseService {
                 .build();
 
         // Finding the docent by DNI (with improved exception handling)
-        Docent docent = docentRepository.findByUserDni(coursePayload.getDniProffesor())
+        Docent docent = docentRepository.findByUserEntityDni(coursePayload.getDniProffesor())
                 .orElseThrow(() -> new DocentNotFoundException("Docente con cédula no encontrada: " + coursePayload.getDniProffesor()));
 
         // Setting the docent to the course entity

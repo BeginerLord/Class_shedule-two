@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface DocentRepository extends JpaRepository<Docent,Long> {
 
-    Optional<Docent> findByUserDni(String dni);
+    Optional<Docent> findByUserEntityDni(String dni);
 
 
 }
