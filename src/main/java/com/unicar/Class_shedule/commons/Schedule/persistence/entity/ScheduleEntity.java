@@ -24,7 +24,6 @@ public class ScheduleEntity {
     private LocalDateTime endTime;
 
 
-
     @Column(name = "room", length = 50, nullable = false)
     private String room;
 

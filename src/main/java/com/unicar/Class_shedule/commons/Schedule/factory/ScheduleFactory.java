@@ -1,6 +1,7 @@
 package com.unicar.Class_shedule.commons.Schedule.factory;
 
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import org.springframework.stereotype.Component;
 
@@ -25,4 +26,18 @@ public class ScheduleFactory {
                 .day(scheduleDto.day())
                 .build();
     }
+    // Convierte una entidad ScheduleEntity y otros parámetros en un CourseScheduleDto
+    public CourseScheduleDto courseScheduleDto(ScheduleEntity scheduleEntity, String courseName, int courseHours, String courseLevel, String docentName) {
+        return CourseScheduleDto.builder()
+                .courseName(courseName)
+                .courseHours(courseHours)
+                .courseLevel(courseLevel)
+                .docentName(docentName)
+                .startTime(scheduleEntity.getStartTime())
+                .endTime(scheduleEntity.getEndTime())
+                .room(scheduleEntity.getRoom())
+                .day(scheduleEntity.getDay())
+                .build();
+    }
+
 }
