@@ -31,7 +31,7 @@ public class CourseEntity {
 
     @ManyToOne
     @JoinColumn(name = "docente_id")  // No puede ser nulo
-    private Docent docente;
+    private Docent docent;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id", nullable = false)

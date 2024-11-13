@@ -72,6 +72,7 @@ public class StudentServiceImpl implements IStudentService {
                 .address(studentPayload.getAddress())
                 .email(studentPayload.getEmail())
                 .password(passwordEncoder.encode(studentPayload.getPassword()))
+                .roles(roles)
                 .isEnabled(true)
                 .accountNoLocked(true)
                 .accountNoExpired(true)

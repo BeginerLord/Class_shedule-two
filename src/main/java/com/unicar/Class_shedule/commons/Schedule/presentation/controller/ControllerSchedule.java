@@ -1,6 +1,7 @@
 package com.unicar.Class_shedule.commons.Schedule.presentation.controller;
 
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePayload;
 import com.unicar.Class_shedule.commons.Schedule.service.interfaces.IScheduleService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +43,7 @@ public class ControllerSchedule {
 
         return ResponseEntity.created(new URI(EndpointsConstants.ENDPOINT_SCHEDULE)).build();
     }
+
     @Operation(summary = "Obtener un horario por ID", description = "Devuelve los detalles de un horario según su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operación exitosa"),
@@ -95,6 +98,17 @@ public class ControllerSchedule {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         iScheduleService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Obtener horario del estudiante logueado", description = "Devuelve el horario del curso para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/student/schedule")
+    public ResponseEntity<List<CourseScheduleDto>> getCourseScheduleByUsername(Principal principal) {
+        List<CourseScheduleDto> schedules = iScheduleService.findCourseScheduleByUsername(principal);
+        return ResponseEntity.ok(schedules);
     }
 
 }

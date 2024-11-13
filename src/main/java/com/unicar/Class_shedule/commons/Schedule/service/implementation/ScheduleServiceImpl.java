@@ -3,17 +3,22 @@ package com.unicar.Class_shedule.commons.Schedule.service.implementation;
 import com.unicar.Class_shedule.commons.Schedule.factory.ScheduleFactory;
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
 import com.unicar.Class_shedule.commons.Schedule.persistence.repository.ScheduleRepository;
+import com.unicar.Class_shedule.commons.Schedule.presentation.dto.CourseScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.dto.ScheduleDto;
 import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePayload;
 import com.unicar.Class_shedule.commons.Schedule.service.interfaces.IScheduleService;
+import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
+import com.unicar.Class_shedule.commons.security.persistencie.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +28,7 @@ import java.util.stream.Collectors;
 public class ScheduleServiceImpl implements IScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleFactory scheduleFactory;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -90,4 +96,44 @@ public class ScheduleServiceImpl implements IScheduleService {
         return new PageImpl<>(scheduleDtoList, pageable, schedulePage.getTotalElements());
 
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseScheduleDto> findCourseScheduleByUsername(Principal principal) {
+        String username = principal.getName();
+        System.out.println("Fetching user with username: " + username);
+
+        UserEntity userEntity = userRepository.findUserEntityByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+
+        System.out.println("User found: " + userEntity);
+
+        if (userEntity.getStudent() == null) {
+            throw new IllegalArgumentException("No student associated with user: " + username);
+        }
+
+        Long studentId = userEntity.getStudent().getId();
+        System.out.println("Fetching course schedule for student ID: " + studentId);
+
+        List<CourseScheduleDto> courseSchedules = scheduleRepository.findCourseScheduleByStudentId(studentId)
+                .stream()
+                .map(schedule -> scheduleFactory.courseScheduleDto(
+                        ScheduleEntity.builder()
+                                .startTime(schedule.startTime())
+                                .endTime(schedule.endTime())
+                                .room(schedule.room())
+                                .day(schedule.day())
+                                .build(),
+                        schedule.courseName(),
+                        schedule.courseHours(),
+                        schedule.courseLevel(),
+                        schedule.docentName()
+                ))
+                .collect(Collectors.toList());
+
+        System.out.println("Course schedules found: " + courseSchedules);
+
+        return courseSchedules;
+    }
+
 }

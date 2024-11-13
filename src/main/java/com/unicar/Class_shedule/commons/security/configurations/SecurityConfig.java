@@ -67,19 +67,28 @@ public class SecurityConfig {
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
                             .hasAnyAuthority("ROLE_ADMIN")
-                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT )
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT)
                             .hasAnyAuthority("ROLE_ADMIN")
                             .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_STUDENT + "/{dni}")
-                            .hasAnyAuthority("ROLE_ADMIN");
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_SCHEDULE + "/student/schedule")
+                            .hasAuthority("ROLE_STUDENT");
 
 
+                    httpRequests
+                            .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SCHEDULE)
+                            .hasAnyAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, EndpointsConstants.ENDPOINT_SCHEDULE + "/{id}")
+                            .hasAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.PUT, EndpointsConstants.ENDPOINT_SCHEDULE + "/{id}")
+                            .hasAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_SCHEDULE + "/{id}")
+                            .hasAuthority("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.GET, EndpointsConstants.ENDPOINT_SCHEDULE)
+                            .hasAuthority("ROLE_ADMIN");
 
 
-                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SCHEDULE).hasAnyAuthority("ROLE_ADMIN");
-
-
-
-                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_STUDENT+"/enroll").hasAnyAuthority("ROLE_ADMIN");
+                    httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_STUDENT + "/enroll").hasAnyAuthority("ROLE_ADMIN");
 
 
                     httpRequests

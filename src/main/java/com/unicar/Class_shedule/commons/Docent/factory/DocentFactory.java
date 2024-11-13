@@ -10,12 +10,12 @@ public class DocentFactory {
     public DocentDto docentsDto (Docent docent){
         return DocentDto.builder()
                 .profile(docent.getProfile())
-                .username(docent.getUserEntity().getUsername())
-                .fullName(docent.getUserEntity().getFullName())
-                .dni(docent.getUserEntity().getDni())
-                .phoneNumber(docent.getUserEntity().getPhoneNumber())
-                .address(docent.getUserEntity().getAddress())
-                .email(docent.getUserEntity().getEmail())
+                .username(docent.getUser().getUsername())
+                .fullName(docent.getUser().getFullName())
+                .dni(docent.getUser().getDni())
+                .phoneNumber(docent.getUser().getPhoneNumber())
+                .address(docent.getUser().getAddress())
+                .email(docent.getUser().getEmail())
                 .build();
     }
 
