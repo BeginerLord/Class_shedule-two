@@ -152,20 +152,17 @@ public class StudentServiceImpl implements IStudentService {
         ).collect(Collectors.toList());
         return new PageImpl<>(studentDtoList, pageable,studentPage.getTotalElements());
     }
-
-    @Override
-    @Transactional
     public void enrollACourse(EnroolAlCoursePayload enrollAlCoursePayload) {
         // Buscar al estudiante y al curso
         Optional<Student> studentOptional = iStudentsRepository.findByUserEntityDni(enrollAlCoursePayload.getDni());
         Optional<CourseEntity> courseOptional = courseRepository.findById(enrollAlCoursePayload.getIdCurso());
 
         // Verificar que tanto el estudiante como el curso existan
-        if (!studentOptional.isPresent()) {
+        if (studentOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudiante no encontrado con DNI: " + enrollAlCoursePayload.getDni());
         }
 
-        if (!courseOptional.isPresent()) {
+        if (courseOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso no encontrado con ID: " + enrollAlCoursePayload.getIdCurso());
         }
 
@@ -185,9 +182,10 @@ public class StudentServiceImpl implements IStudentService {
         iStudentsRepository.save(student); // Esto debería actualizar la tabla intermedia automáticamente
 
         // Respuesta exitosa
-        // (Podrías retornar un mensaje de éxito en lugar de lanzar una excepción)
+        // Puedes devolver un mensaje o simplemente realizar un log
         // return ResponseEntity.status(HttpStatus.CREATED).body("Estudiante inscrito exitosamente en el curso");
     }
+
 
 
     @Override
