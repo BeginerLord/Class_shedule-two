@@ -91,8 +91,20 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     @Transactional
     public void deleteByDni(String dni) {
+        // Buscar al estudiante por su DNI
         Student student = iStudentsRepository.findByUserEntityDni(dni)
                 .orElseThrow(() -> new EntityNotFoundException("STUDENT NOT FOUND WITH DNI " + dni));
+
+        // Verificar si el estudiante tiene cursos asociados
+        if (student.getCourses() != null && !student.getCourses().isEmpty()) {
+            // Si el estudiante tiene cursos, no se puede eliminar
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, // Código de estado HTTP 409 Conflict
+                    "CANNOT DELETE STUDENT. IT IS RELATED TO COURSES."
+            );
+        }
+
+        // Si no tiene cursos asociados, se puede eliminar
         iStudentsRepository.delete(student);
     }
 

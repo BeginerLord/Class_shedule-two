@@ -10,6 +10,7 @@ import com.unicar.Class_shedule.commons.Schedule.presentation.payload.SchedulePa
 import com.unicar.Class_shedule.commons.Schedule.service.interfaces.IScheduleService;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
 import com.unicar.Class_shedule.commons.security.persistencie.repositories.UserRepository;
+import com.unicar.Class_shedule.commons.utils.exceptions.ScheduleConflictException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,12 +48,19 @@ public class ScheduleServiceImpl implements IScheduleService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-
+        // Buscar el horario por su ID
         ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with id: " + id));
-        scheduleRepository.delete(scheduleEntity);
 
+        // Verificar si el horario tiene cursos asociados
+        if (scheduleEntity.getCourses() != null && !scheduleEntity.getCourses().isEmpty()) {
+            throw new ScheduleConflictException("Cannot delete schedule with active course associations.");
+        }
+
+        // Eliminar el horario si no tiene cursos asociados
+        scheduleRepository.delete(scheduleEntity);
     }
+
 
     @Override
     public void updateSchedule(SchedulePayload schedulePayload, Long id) {

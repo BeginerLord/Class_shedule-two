@@ -11,14 +11,17 @@ import com.unicar.Class_shedule.commons.Docent.persistence.repositories.DocentRe
 import com.unicar.Class_shedule.commons.Schedule.persistence.entity.ScheduleEntity;
 import com.unicar.Class_shedule.commons.Schedule.persistence.repository.ScheduleRepository;
 import com.unicar.Class_shedule.commons.utils.exceptions.DocentNotFoundException;
+import com.unicar.Class_shedule.commons.utils.exceptions.ScheduleConflictException;
 import com.unicar.Class_shedule.commons.utils.exceptions.ScheduleNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,15 +90,23 @@ public class CourseServiceImpl implements ICourseService {
         }
 
     }
-
     @Override
     @Transactional
     public void deleteByName(String name) {
+        // Buscar el curso por nombre
         CourseEntity courseEntity = courseRepository.findCourseByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("COURSE NOT FOUND WITH NAME " + name));
-        courseRepository.delete(courseEntity);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found with name: " + name));
 
+        // Verificar si tiene relaciones con ScheduleEntity o Docent
+        if (courseEntity.getSchedule() != null || courseEntity.getDocent() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete course with active relationships.");
+        }
+
+        // Eliminar el curso si no tiene relaciones activas
+        courseRepository.delete(courseEntity);
     }
+
+
 
     @Override
     @Transactional(readOnly = true)

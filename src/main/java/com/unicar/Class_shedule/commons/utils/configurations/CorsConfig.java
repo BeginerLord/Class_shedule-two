@@ -18,10 +18,11 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 // Configura CORS para todos los endpoints de la API
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // Permitir todos los orígenes
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Permitir los métodos HTTP más comunes
-                        .allowedHeaders("*") // Permitir todos los encabezados
-                        .exposedHeaders("*"); // Exponer todos los encabezados en la respuesta
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .exposedHeaders("*")
+                        .allowCredentials(true); // Permitir el uso de credenciales
             }
         };
     }

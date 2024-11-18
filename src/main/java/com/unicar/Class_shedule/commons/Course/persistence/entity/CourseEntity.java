@@ -33,7 +33,7 @@ public class CourseEntity {
     @JoinColumn(name = "docente_id")  // No puede ser nulo
     private Docent docent;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "schedule_id", referencedColumnName = "id", nullable = false)
     private ScheduleEntity schedule;
 

@@ -1,10 +1,12 @@
 package com.unicar.Class_shedule.commons.Schedule.persistence.entity;
 
+import com.unicar.Class_shedule.commons.Course.persistence.entity.CourseEntity;
 import com.unicar.Class_shedule.commons.Docent.persistence.entity.Docent;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +31,6 @@ public class ScheduleEntity {
 
     @Column(name = "day", length = 10, nullable = false)
     private String day;
-
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseEntity> courses;
 }

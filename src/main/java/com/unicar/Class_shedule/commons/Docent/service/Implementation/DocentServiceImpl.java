@@ -10,6 +10,8 @@ import com.unicar.Class_shedule.commons.security.persistencie.entities.RoleEntit
 import com.unicar.Class_shedule.commons.security.persistencie.entities.RoleEnum;
 import com.unicar.Class_shedule.commons.security.persistencie.entities.UserEntity;
 import com.unicar.Class_shedule.commons.security.persistencie.repositories.RoleRepository;
+import com.unicar.Class_shedule.commons.utils.exceptions.ResourceNotFoundException;
+import com.unicar.Class_shedule.commons.utils.exceptions.ValidationException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -75,13 +77,24 @@ public class DocentServiceImpl implements IDocentService {
 
     }
 
-    @Override
+     @Override
     @Transactional
     public void deleteByDni(String dni) {
+        // Buscar al docente por su DNI
         Docent docent = docentRepository.findByUserEntityDni(dni)
-                .orElseThrow(() -> new IllegalArgumentException("DOCENT NOT FOUND WITH DNI " + dni));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró un docente con el DNI: " + dni));
+
+        // Validar que no tenga cursos asociados
+        if (docent.getCursos() != null && !docent.getCursos().isEmpty()) {
+            // Si tiene cursos asociados, no se puede eliminar
+            throw new ValidationException("No se puede eliminar el docente porque está vinculado a uno o más cursos.");
+        }
+
+        // Si no tiene cursos asociados, eliminarlo
         docentRepository.delete(docent);
     }
+
+
 
     @Override
     @Transactional

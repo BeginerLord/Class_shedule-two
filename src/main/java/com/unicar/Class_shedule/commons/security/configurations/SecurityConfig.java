@@ -39,13 +39,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequests -> {
                     // Permitir acceso libre a la interfaz de Swagger UI
                     httpRequests.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-
+                    httpRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     // Endpoints públicos accesibles sin autenticación
+                    httpRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
                     httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_LOGIN).permitAll();
 
                     // Endpoints privados que requieren autenticación y autorización específica
                     httpRequests.requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_SIGNUP)
-                            .hasAuthority(RoleEnum.ADMIN.getRoleName());
+                            .permitAll();// .hasAuthority(RoleEnum.ADMIN.getRoleName());
 
                     httpRequests
                             .requestMatchers(HttpMethod.POST, EndpointsConstants.ENDPOINT_TEACHER)
