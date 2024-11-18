@@ -182,10 +182,11 @@ public class StudentServiceImpl implements IStudentService {
         student.getCourses().add(course);
 
         // Guardar la entidad estudiante con la nueva inscripción
-        iStudentsRepository.save(student);
+        iStudentsRepository.save(student); // Esto debería actualizar la tabla intermedia automáticamente
 
         // Respuesta exitosa
-        throw new ResponseStatusException(HttpStatus.CREATED, "Estudiante inscrito exitosamente en el curso");
+        // (Podrías retornar un mensaje de éxito en lugar de lanzar una excepción)
+        // return ResponseEntity.status(HttpStatus.CREATED).body("Estudiante inscrito exitosamente en el curso");
     }
 
 
