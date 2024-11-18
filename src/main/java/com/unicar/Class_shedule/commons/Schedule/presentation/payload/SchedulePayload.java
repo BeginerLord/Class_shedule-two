@@ -12,15 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SchedulePayload {
-    @NotNull(message = "Start time can't be null")
     private LocalDateTime startTime;
-
-    @NotNull(message = "End time can't be null")
     private LocalDateTime endTime;
-
-    @NotBlank(message = "Room can't be blank")
     private String room;
-
-    @NotBlank(message = "Day can't be blank")
     private String day;
 }
