@@ -155,26 +155,39 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     @Transactional
-    public void enrollACourse(EnroolAlCoursePayload enroolAlCoursePayload) {
-        Optional<Student> studentDto = iStudentsRepository.findByUserEntityDni(enroolAlCoursePayload.getDni());
-        Optional<CourseEntity> course = courseRepository.findById(enroolAlCoursePayload.getIdCurso());
+    public void enrollACourse(EnroolAlCoursePayload enrollAlCoursePayload) {
+        // Buscar al estudiante y al curso
+        Optional<Student> studentOptional = iStudentsRepository.findByUserEntityDni(enrollAlCoursePayload.getDni());
+        Optional<CourseEntity> courseOptional = courseRepository.findById(enrollAlCoursePayload.getIdCurso());
 
-        if (studentDto.isPresent() && course.isPresent()) {
-            Student estudiante = studentDto.get();
-            CourseEntity curso = course.get();
-
-            // Verificar si el estudiante ya está inscrito en el curso
-            if (estudiante.getCourses().contains(curso)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "El estudiante ya está inscrito en este curso");
-            }
-
-            // Si no está inscrito, agregar el curso y guardar
-            estudiante.getCourses().add(curso);
-            iStudentsRepository.save(estudiante);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudiante o curso no encontrado");
+        // Verificar que tanto el estudiante como el curso existan
+        if (!studentOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudiante no encontrado con DNI: " + enrollAlCoursePayload.getDni());
         }
+
+        if (!courseOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso no encontrado con ID: " + enrollAlCoursePayload.getIdCurso());
+        }
+
+        // Obtener las entidades del estudiante y curso
+        Student student = studentOptional.get();
+        CourseEntity course = courseOptional.get();
+
+        // Verificar si el estudiante ya está inscrito en el curso
+        if (student.getCourses().contains(course)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El estudiante ya está inscrito en este curso");
+        }
+
+        // Matricular al estudiante en el curso
+        student.getCourses().add(course);
+
+        // Guardar la entidad estudiante con la nueva inscripción
+        iStudentsRepository.save(student);
+
+        // Respuesta exitosa
+        throw new ResponseStatusException(HttpStatus.CREATED, "Estudiante inscrito exitosamente en el curso");
     }
+
 
     @Override
     public List<Object[]> getCourseDetailsForUser() {
