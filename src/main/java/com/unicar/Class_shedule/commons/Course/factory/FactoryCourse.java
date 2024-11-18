@@ -9,6 +9,7 @@ public class FactoryCourse {
     public CourseDto courseDto(CourseEntity courseEntity) {
 
         return CourseDto.builder()
+                .id(courseEntity.getId())
                 .name(courseEntity.getName())
                 .level(courseEntity.getLevel())
                 .cantHrs(courseEntity.getCantHrs())

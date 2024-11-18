@@ -11,6 +11,7 @@ public class ScheduleFactory {
 //convierte una entidad ScheduleEntity en un ScheduleDto
     public ScheduleDto scheduleDto(ScheduleEntity scheduleEntity) {
         return new ScheduleDto(
+                scheduleEntity.getId(),
                 scheduleEntity.getStartTime(),
                 scheduleEntity.getEndTime(),
                 scheduleEntity.getRoom(),

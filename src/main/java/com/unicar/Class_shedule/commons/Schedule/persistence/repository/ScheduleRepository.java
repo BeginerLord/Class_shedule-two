@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,8 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
             "JOIN d.userEntity u " +
             "WHERE d.id = :professorId")
     List<ProfessorScheduleDto> findCourseScheduleByProfessorId(@Param("professorId") Long professorId);
+    Optional<ScheduleEntity> findByStartTime(LocalDateTime startTime);
 
+    void deleteByStartTime(LocalDateTime startTime);
 
 }

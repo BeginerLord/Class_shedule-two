@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class ControllerSchedule {
     public ResponseEntity<Page<ScheduleDto>> findSchedules(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "scheduleName") String sortBy,
+            @RequestParam(defaultValue = "startTime") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
         Pageable pageable = PageRequest.of(page, size,
@@ -100,7 +101,6 @@ public class ControllerSchedule {
         iScheduleService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
     @Operation(summary = "Obtener horario del estudiante logueado", description = "Devuelve el horario del curso para el usuario autenticado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operation successful"),
