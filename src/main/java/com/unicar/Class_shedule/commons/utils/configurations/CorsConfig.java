@@ -18,11 +18,10 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 // Configura CORS para todos los endpoints de la API
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .exposedHeaders("*")
-                        .allowCredentials(true); // Permitir el uso de credenciales
+                        .allowedOrigins("https://class-shedule-two.onrender.com", "http://localhost:3000") // Permite estos dominios
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
+                        .allowedHeaders("*") // Permite todos los encabezados
+                        .allowCredentials(true); // Permite enviar cookies o credenciales
             }
         };
     }
